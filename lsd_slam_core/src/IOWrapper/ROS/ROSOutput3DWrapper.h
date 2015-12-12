@@ -20,6 +20,7 @@
 
 #pragma once
 
+#ifdef USE_ROS
 #include <ros/ros.h>
 #include "IOWrapper/Output3DWrapper.h"
 
@@ -102,3 +103,4 @@ private:
 	ros::NodeHandle nh_;
 };
 }
+#endif // USE_ROS

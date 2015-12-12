@@ -19,7 +19,7 @@
 */
 
 #pragma once
-
+#ifdef USE_ROS
 #include "IOWrapper/NotifyBuffer.h"
 #include "IOWrapper/TimestampedObject.h"
 #include "IOWrapper/InputImageStream.h"
@@ -78,3 +78,4 @@ private:
 };
 
 }
+#endif // USE_ROS

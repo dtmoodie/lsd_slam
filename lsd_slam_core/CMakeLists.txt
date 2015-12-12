@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.7)
 project(lsd_slam_core)
-#include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -10,15 +10,13 @@ project(lsd_slam_core)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 set(ROS_BUILD_TYPE Release)
 
-#rosbuild_init() 
-
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
-#find_package(X11 REQUIRED)
+
 
 # FabMap
 # uncomment this part to enable fabmap
@@ -29,12 +27,12 @@ find_package(SuiteParse REQUIRED) # Apparently needed by g2o
 
 # Dynamic Reconfigure Services
 #rosbuild_find_ros_package(dynamic_reconfigure)
-include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
+#include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
 #gencfg()
 
 # SSE flags
 #rosbuild_check_for_sse()
-add_definitions("-DUSE_ROS")
+#add_definitions("-DUSE_ROS")
 add_definitions("-DENABLE_SSE")
 
 # Also add some useful compiler flag
@@ -82,7 +80,7 @@ include_directories(
 
 
 # build shared library.
-rosbuild_add_library(lsdslam SHARED ${SOURCE_FILES})
+add_library(lsdslam SHARED ${SOURCE_FILES})
 target_link_libraries(lsdslam ${FABMAP_LIB} 
     g2o_core 
     g2o_stuff 
