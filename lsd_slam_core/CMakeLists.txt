@@ -16,14 +16,15 @@ set(CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
-
+find_package(G2O REQUIRED)
+INCLUDE_DIRECTORIES(${G2O_INCLUDE_DIR})
 
 # FabMap
 # uncomment this part to enable fabmap
-#add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
-#include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
-#add_definitions("-DHAVE_FABMAP")
-#set(FABMAP_LIB openFABMAP )
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
+add_definitions("-DHAVE_FABMAP")
+set(FABMAP_LIB openFABMAP )
 
 # Dynamic Reconfigure Services
 #rosbuild_find_ros_package(dynamic_reconfigure)

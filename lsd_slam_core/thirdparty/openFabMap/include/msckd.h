@@ -51,14 +51,29 @@
 // possibility of such damage.
 //////////////////////////////////////////////////////////////////////////////*/
 
-#ifndef OPENFABMAP_H_
-#define OPENFABMAP_H_
+#ifndef MSCKD_H_
+#define MSCKD_H_
 
-// All of the core modules that comprise OpenFABMAP
-#include "fabmap.hpp"
-#include "bowmsctrainer.hpp"
-#include "chowliutree.hpp"
-// TODO: Integrate MSC KD-Tree trainer
-//#include "msckd.h"
+#include "opencv2/core/core.hpp"
+#include "opencv2/features2d/features2d.hpp"
 
-#endif /* OPENFABMAP_H_ */
+#include <vector>
+
+// Custom implementation of Modified Sequential Clustering
+class BOWMSCTrainer : public cv::BOWTrainer {
+ public:
+  BOWMSCTrainer(double clusterSize = 0.4, int minDescriptorsPerCluster = 2,
+                bool shuffleDescriptors = false);
+  virtual ~BOWMSCTrainer();
+
+  // Returns trained vocabulary (i.e. cluster centers).
+  virtual cv::Mat cluster() const;
+  virtual cv::Mat cluster(const cv::Mat &descriptors) const;
+
+ protected:
+  double clusterSize;
+  int minDescriptorsPerCluster;
+  bool shuffleDescriptors;
+};
+
+#endif  // MSCKD_H_

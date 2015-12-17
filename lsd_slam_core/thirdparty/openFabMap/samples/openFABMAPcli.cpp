@@ -1,38 +1,65 @@
-/*------------------------------------------------------------------------
- Copyright 2012 Arren Glover [aj.glover@qut.edu.au]
-                Will Maddern [w.maddern@qut.edu.au]
-
- This file is part of OpenFABMAP. http://code.google.com/p/openfabmap/
-
- OpenFABMAP is free software: you can redistribute it and/or modify it under
- the terms of the GNU General Public License as published by the Free Software
- Foundation, either version 3 of the License, or (at your option) any later
- version.
-
- OpenFABMAP is distributed in the hope that it will be useful, but WITHOUT ANY
- WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- details.
-
- For published work which uses all or part of OpenFABMAP, please cite:
- http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6224843
-
- Original Algorithm by Mark Cummins and Paul Newman:
- http://ijr.sagepub.com/content/27/6/647.short
- http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=5613942
- http://ijr.sagepub.com/content/30/9/1100.abstract
-
- You should have received a copy of the GNU General Public License along with
- OpenFABMAP. If not, see http://www.gnu.org/licenses/.
-------------------------------------------------------------------------*/
-
-#define OPENCV2P4
+/*//////////////////////////////////////////////////////////////////////////////
+//
+//  IMPORTANT: READ BEFORE DOWNLOADING, COPYING, INSTALLING OR USING.
+//
+//  By downloading, copying, installing or using the software you agree to this
+//  license. If you do not agree to this license, do not download, install,
+//  copy or use the software.
+//
+// This file originates from the openFABMAP project:
+// [http://code.google.com/p/openfabmap/] -or-
+// [https://github.com/arrenglover/openfabmap]
+//
+// For published work which uses all or part of OpenFABMAP, please cite:
+// [http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6224843]
+//
+// Original Algorithm by Mark Cummins and Paul Newman:
+// [http://ijr.sagepub.com/content/27/6/647.short]
+// [http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=5613942]
+// [http://ijr.sagepub.com/content/30/9/1100.abstract]
+//
+//                           License Agreement
+//
+// Copyright (C) 2012 Arren Glover [aj.glover@qut.edu.au] and
+//                    Will Maddern [w.maddern@qut.edu.au], all rights reserved.
+//
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+//  * Redistribution's of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//
+//  * Redistribution's in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+//  * The name of the copyright holders may not be used to endorse or promote
+//    products derived from this software without specific prior written
+///   permission.
+//
+// This software is provided by the copyright holders and contributors "as is"
+// and any express or implied warranties, including, but not limited to, the
+// implied warranties of merchantability and fitness for a particular purpose
+// are disclaimed. In no event shall the Intel Corporation or contributors be
+// liable for any direct, indirect, incidental, special, exemplary, or
+// consequential damages (including, but not limited to, procurement of
+// substitute goods or services; loss of use, data, or profits; or business
+// interruption) however caused and on any theory of liability, whether in
+// contract, strict liability,or tort (including negligence or otherwise)
+// arising in any way out of the use of this software, even if advised of the
+// possibility of such damage.
+//////////////////////////////////////////////////////////////////////////////*/
 
 #include "../include/openfabmap.hpp"
-#include <fstream>
+
+#include <opencv2/opencv.hpp>
 #ifdef OPENCV2P4
 #include <opencv2/nonfree/nonfree.hpp>
 #endif
+
+#include <fstream>
+#include <iostream>
 
 /*
 openFABMAP procedural functions
@@ -568,13 +595,13 @@ int openFABMAP(std::string testPath,
 	
 	
 	cv::Mat confusion_mat(testImageDescs.rows, testImageDescs.rows, CV_64FC1);
-	confusion_mat = 0; // init to 0's
+    confusion_mat.setTo(0); // init to 0's
 
 
 	if (!addNewOnly) {
 
 		//automatically comparing a whole dataset
-		fabmap->compare(testImageDescs, matches, true);
+        fabmap->localize(testImageDescs, matches, true);
 
 		for(l = matches.begin(); l != matches.end(); l++) {
 			if(l->imgIdx < 0) {
@@ -591,14 +618,14 @@ int openFABMAP(std::string testPath,
 		for(int i = 0; i < testImageDescs.rows; i++) {
 			matches.clear();
 			//compare images individually
-			fabmap->compare(testImageDescs.row(i), matches);
+            fabmap->localize(testImageDescs.row(i), matches);
 
 			bool new_place_max = true;
 			for(l = matches.begin(); l != matches.end(); l++) {
 				
 				if(l->imgIdx < 0) {
 					//add the new place to the confusion matrix 'diagonal'
-					confusion_mat.at<double>(i, matches.size()-1) = l->match;
+                    confusion_mat.at<double>(i, (int)matches.size()-1) = l->match;
 
 				} else {
 					//add the score to the confusion matrix
@@ -934,7 +961,7 @@ void drawRichKeypoints(const cv::Mat& src, std::vector<cv::KeyPoint>& kpts, cv::
 		colour = CV_RGB(255, 0, 0);
 	}
 	
-	for (int iii = kpts_sorted.size()-1; iii >= 0; iii--) {
+    for (int iii = (int)kpts_sorted.size()-1; iii >= 0; iii--) {
 
 		if (minResponse != maxResponse) {
 			normalizedScore = pow((kpts_sorted.at(iii).response - minResponse) / (maxResponse - minResponse), 0.25);

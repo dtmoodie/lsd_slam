@@ -50,15 +50,3 @@
 // arising in any way out of the use of this software, even if advised of the
 // possibility of such damage.
 //////////////////////////////////////////////////////////////////////////////*/
-
-#ifndef OPENFABMAP_H_
-#define OPENFABMAP_H_
-
-// All of the core modules that comprise OpenFABMAP
-#include "fabmap.hpp"
-#include "bowmsctrainer.hpp"
-#include "chowliutree.hpp"
-// TODO: Integrate MSC KD-Tree trainer
-//#include "msckd.h"
-
-#endif /* OPENFABMAP_H_ */
