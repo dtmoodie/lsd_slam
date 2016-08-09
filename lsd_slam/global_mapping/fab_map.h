@@ -26,7 +26,7 @@ namespace of2 {
 	class FabMap;
 }
 namespace cv {
-	class FeatureDetector;
+	class Feature2D;
 	class BOWImgDescriptorExtractor;
 }
 
@@ -67,7 +67,7 @@ public:
 	
 private:
 	int nextImageID;
-	cv::Ptr<cv::FeatureDetector> detector;
+	cv::Ptr<cv::Feature2D> detector;
 	cv::Ptr<cv::BOWImgDescriptorExtractor> bide;
 	cv::Ptr<of2::FabMap> fabMap;
 	
